@@ -1,0 +1,23 @@
+version: "3"
+
+services:
+
+  vehicle-server:
+    container_name: vehicle-server
+    image: ramesesinc/local-vehicle-server:255.01.003.001
+    restart: always
+    logging: 
+      driver: "json-file"
+      options:
+        max-file: "5"
+        max-size: "10m"
+    env_file:
+      - ./env.conf
+      - ../../_custom/env.conf
+    ports: 
+      - "8072:8070"
+    volumes:
+      - ../../_res/connections:/apps/enterprise/connections/ext
+
+      - ../../_custom/datasources/vehicleds:/services/datasources/mainds
+      - ./temp/rameses-gov-etracs-vehicle-services.jar:/apps/enterprise/modules/rameses-gov-etracs-vehicle-services.jar

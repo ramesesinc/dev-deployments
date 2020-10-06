@@ -1,0 +1,231 @@
+ALTER TABLE `waterworks_billitem` 
+ADD COLUMN `refbillid` varchar(50) NULL AFTER `recurringfeeid`,
+ADD CONSTRAINT `fk_waterworks_billitem_refbillid` FOREIGN KEY (`refbillid`) REFERENCES `waterworks_bill` (`objid`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+SET FOREIGN_KEY_CHECKS=0;
+DROP TABLE waterworks_newconnection;
+DROP TABLE waterworks_newconnection_fee;
+DROP TABLE waterworks_newconnection_task;
+
+DROP TABLE waterworks_reconnection;
+DROP TABLE waterworks_reconnection_fee;
+DROP TABLE waterworks_reconnection_task;
+SET FOREIGN_KEY_CHECKS=1;
+
+CREATE TABLE `waterworks_application` (
+  `objid` varchar(50) NOT NULL,
+  `state` varchar(50) DEFAULT NULL,
+  `dtcreated` date DEFAULT NULL,
+  `appno` varchar(50) DEFAULT NULL,
+  `apptype` varchar(50) DEFAULT NULL,
+  `acctid` varchar(50) DEFAULT NULL,
+  `acctinfoid` varchar(50) DEFAULT NULL,
+  `taskid` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`objid`) USING BTREE,
+  KEY `fk_waterworks_newconnection_taskid` (`taskid`) USING BTREE,
+  KEY `fk_waterworks_newconnection_acctid` (`acctid`) USING BTREE,
+  KEY `fk_waterworks_newconnection_acctinfoid` (`acctinfoid`) USING BTREE,
+  CONSTRAINT `fk_waterworks_application_acctid` FOREIGN KEY (`acctid`) REFERENCES `waterworks_account` (`objid`),
+  CONSTRAINT `fk_waterworks_application_acctinfoid` FOREIGN KEY (`acctinfoid`) REFERENCES `waterworks_account_info` (`objid`),
+  CONSTRAINT `fk_waterworks_application_taskid` FOREIGN KEY (`taskid`) REFERENCES `waterworks_application_task` (`taskid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `waterworks_application_fee` (
+  `objid` varchar(50) NOT NULL,
+  `appid` varchar(50) DEFAULT NULL,
+  `itemid` varchar(50) DEFAULT NULL,
+  `particulars` varchar(255) DEFAULT NULL,
+  `amount` decimal(16,2) DEFAULT NULL,
+  `amtpaid` decimal(16,2) DEFAULT NULL,
+  `installmentid` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`objid`) USING BTREE,
+  KEY `fk_application_fee_application` (`appid`) USING BTREE,
+  KEY `fk_waterworks_application_fee_itemid` (`itemid`),
+  CONSTRAINT `fk_waterworks_application_fee_appid` FOREIGN KEY (`appid`) REFERENCES `waterworks_application` (`objid`),
+  CONSTRAINT `fk_waterworks_application_fee_itemid` FOREIGN KEY (`itemid`) REFERENCES `waterworks_itemaccount` (`objid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `waterworks_application_task` (
+  `taskid` varchar(50) NOT NULL,
+  `refid` varchar(50) DEFAULT NULL,
+  `parentprocessid` varchar(50) DEFAULT NULL,
+  `state` varchar(50) DEFAULT NULL,
+  `startdate` datetime DEFAULT NULL,
+  `enddate` datetime DEFAULT NULL,
+  `assignee_objid` varchar(50) DEFAULT NULL,
+  `assignee_name` varchar(100) DEFAULT NULL,
+  `actor_objid` varchar(50) DEFAULT NULL,
+  `actor_name` varchar(100) DEFAULT NULL,
+  `message` varchar(255) DEFAULT NULL,
+  `prevtaskid` varchar(50) DEFAULT NULL,
+  `dtcreated` datetime DEFAULT NULL,
+  PRIMARY KEY (`taskid`) USING BTREE,
+  KEY `ix_refid` (`refid`) USING BTREE,
+  CONSTRAINT `fk_waterworks_newconnection_task_refid` FOREIGN KEY (`refid`) REFERENCES `waterworks_application` (`objid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `waterworks_account` 
+ADD CONSTRAINT `fk_waterworks_account_applicationid` FOREIGN KEY (`applicationid`) REFERENCES `waterworks_application` (`objid`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+
+CREATE TABLE tmp_firstbill  (
+  `acctid` varchar(50) NOT NULL,
+  `billid` varchar(50) NOT NULL,
+  PRIMARY KEY (`acctid`)
+);
+
+INSERT INTO tmp_firstbill (acctid, billid )
+SELECT x.* 
+FROM 
+(SELECT wa.objid AS acctid,  
+ (SELECT wb.objid 
+   FROM waterworks_bill wb 
+   WHERE wb.acctid = wa.objid 
+   ORDER BY wb.year ASC, wb.month ASC 
+   LIMIT 1) AS billid    
+FROM waterworks_account wa) x
+WHERE NOT(x.billid IS NULL);
+
+UPDATE waterworks_billitem wbi, tmp_firstbill fb 
+SET wbi.refbillid = fb.billid 
+WHERE wbi.acctid = fb.acctid AND wbi.billid IS NULL; 
+
+ALTER TABLE `waterworks_account_info` 
+MODIFY COLUMN `subareaid` varchar(50) ;
+
+ALTER TABLE `waterworks_consumption` 
+ADD CONSTRAINT `fk_waterworks_consumption_billid` FOREIGN KEY (`billid`) REFERENCES `waterworks_bill` (`objid`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+SET FOREIGN_KEY_CHECKS=0;
+
+DROP TABLE waterworks_compromise;
+DROP TABLE waterworks_compromise_task;
+
+CREATE TABLE `waterworks_compromise` (
+  `objid` varchar(50) NOT NULL,
+  `controlno` varchar(50) DEFAULT NULL,
+  `state` varchar(50) DEFAULT NULL,
+  `dtcreated` date DEFAULT NULL,
+  `acctid` varchar(50) DEFAULT NULL,
+  `acctinfoid` varchar(50) DEFAULT NULL,
+  `particulars` varchar(255) DEFAULT NULL,
+  `taskid` varchar(50) DEFAULT NULL,
+  `amount` decimal(16,2) DEFAULT NULL,
+  `downpaymentrate` decimal(16,2) DEFAULT NULL,
+  `downpayment` decimal(16,2) DEFAULT NULL,
+  `term` int(255) DEFAULT NULL,
+  `startduedate` date DEFAULT NULL,
+  PRIMARY KEY (`objid`),
+  UNIQUE KEY `uix_waterworks_change_request_controlno` (`controlno`),
+  KEY `objid` (`objid`) USING BTREE,
+  KEY `fk_waterworks_change_request_acctid` (`acctid`),
+  KEY `fk_waterworks_change_request_taskid` (`taskid`),
+  KEY `fk_waterworks_change_request_oldacctinfoid` (`acctinfoid`),
+  CONSTRAINT `waterworks_compromise_acctid` FOREIGN KEY (`acctid`) REFERENCES `waterworks_account` (`objid`),
+  CONSTRAINT `waterworks_compromise_acctinfoid` FOREIGN KEY (`acctinfoid`) REFERENCES `waterworks_account_info` (`objid`),
+  CONSTRAINT `waterworks_compromise_taskid` FOREIGN KEY (`taskid`) REFERENCES `waterworks_compromise_task` (`taskid`)
+); 
+
+CREATE TABLE `waterworks_compromise_task` (
+  `taskid` varchar(50) NOT NULL,
+  `refid` varchar(50) DEFAULT NULL,
+  `parentprocessid` varchar(50) DEFAULT NULL,
+  `state` varchar(50) DEFAULT NULL,
+  `startdate` datetime DEFAULT NULL,
+  `enddate` datetime DEFAULT NULL,
+  `assignee_objid` varchar(50) DEFAULT NULL,
+  `assignee_name` varchar(100) DEFAULT NULL,
+  `actor_objid` varchar(50) DEFAULT NULL,
+  `actor_name` varchar(100) DEFAULT NULL,
+  `message` varchar(255) DEFAULT NULL,
+  `dtcreated` datetime DEFAULT NULL,
+  `prevtaskid` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`taskid`),
+  KEY `ix_refid` (`refid`),
+  CONSTRAINT `waterworks_compromise_task_refid` FOREIGN KEY (`refid`) REFERENCES `waterworks_compromise` (`objid`)
+);
+
+CREATE TABLE `waterworks_compromise_billitem` (
+  `objid` varchar(50) NOT NULL,
+  `parentid` varchar(50) DEFAULT NULL,
+  `billitemid` varchar(50) DEFAULT NULL,
+  `amount` decimal(16,2) DEFAULT NULL,
+  `amtpaid` decimal(16,2) DEFAULT NULL,
+  PRIMARY KEY (`objid`),
+  KEY `fk_waterworks_compromise_billitem_billitemid` (`billitemid`),
+  KEY `fk_waterworks_compromise_billitem_parentid` (`parentid`),
+  CONSTRAINT `fk_waterworks_compromise_billitem_billitemid` FOREIGN KEY (`billitemid`) REFERENCES `waterworks_billitem` (`objid`),
+  CONSTRAINT `fk_waterworks_compromise_billitem_parentid` FOREIGN KEY (`parentid`) REFERENCES `waterworks_compromise` (`objid`)
+);
+
+CREATE TABLE `waterworks_compromise_fee` (
+  `objid` varchar(50) NOT NULL,
+  `parentid` varchar(50) DEFAULT NULL,
+  `itemid` varchar(50) DEFAULT NULL,
+  `particulars` varchar(255) DEFAULT NULL,
+  `amount` decimal(16,2) DEFAULT NULL,
+  `amtpaid` decimal(16,2) DEFAULT NULL,
+  `duedate` date DEFAULT NULL,
+  `itemtype` varchar(50),
+  PRIMARY KEY (`objid`),
+  KEY `fk_application_fee_application` (`parentid`),
+  KEY `waterworks_compromise_fee_itemid` (`itemid`),
+  CONSTRAINT `waterworks_compromise_fee_itemid` FOREIGN KEY (`itemid`) REFERENCES `waterworks_itemaccount` (`objid`),
+  CONSTRAINT `waterworks_compromise_fee_parentid` FOREIGN KEY (`parentid`) REFERENCES `waterworks_compromise` (`objid`)
+);
+
+DROP VIEW IF EXISTS vw_waterworks_compromise;
+CREATE VIEW vw_waterworks_compromise AS 
+SELECT   
+  wcr.*,
+  wcr.amount - wcr.downpayment AS balance,
+  wa.acctno AS acctno, 
+
+ t.state AS task_state,
+ t.startdate AS task_startdate,
+ t.enddate AS task_enddate,
+ t.assignee_objid AS task_assignee_objid,
+ t.assignee_name AS task_assignee_name,
+ t.actor_objid AS task_actor_objid,
+ t.actor_name AS task_actor_name,
+ (SELECT title FROM sys_wf_node WHERE processname = 'waterworks_compromise' AND name=t.state) AS task_title
+
+FROM waterworks_compromise wcr 
+INNER JOIN waterworks_compromise_task t ON wcr.taskid = t.taskid 
+INNER JOIN waterworks_account wa ON wcr.acctid = wa.objid;  
+
+DROP VIEW IF EXISTS vw_waterworks_compromise_billitem;
+CREATE VIEW vw_waterworks_compromise_billitem AS 
+SELECT   
+  wcb.*,
+  bi.year,
+  bi.month, 
+  ia.title AS item_title
+
+FROM waterworks_compromise_billitem wcb 
+INNER JOIN waterworks_billitem bi ON  wcb.billitemid = bi.objid 
+INNER JOIN waterworks_itemaccount ia ON bi.itemid = ia.objid;
+
+SET FOREIGN_KEY_CHECKS=1;
+
+
+ALTER TABLE `waterworks_payment` 
+ADD COLUMN `compromiseid` varchar(50) NULL AFTER `appid`,
+ADD CONSTRAINT `fk_waterworks_payment_appid` FOREIGN KEY (`appid`) REFERENCES `waterworks_application` (`objid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+ADD CONSTRAINT `fk_waterworks_payment_compromiseid` FOREIGN KEY (`compromiseid`) REFERENCES `waterworks_compromise` (`objid`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+
+ALTER TABLE `waterworks_payment_item` 
+ADD COLUMN `billitemid` varchar(50) NULL ,
+ADD COLUMN `compromisefeeid` varchar(50); 
+
+ALTER TABLE `waterworks_payment_item` DROP FOREIGN KEY `fk_waterworks_payment_item_refid`;
+
+ALTER TABLE `waterworks_payment_item` 
+ADD CONSTRAINT `fk_waterworks_payment_item_billitemid` FOREIGN KEY (`billitemid`) REFERENCES `waterworks_billitem` (`objid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+ADD CONSTRAINT `fk_waterworks_payment_item_compromisefeeid` FOREIGN KEY (`compromisefeeid`) REFERENCES `waterworks_compromise_fee` (`objid`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+UPDATE waterworks_payment_item SET billitemid = refid WHERE reftype = 'waterworks_billitem';
+
+
+
