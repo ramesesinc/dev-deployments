@@ -15,15 +15,21 @@ services:
       TZ: "Asia/Manila"
     env_file:
       - ./env.conf
+      - ../../_res/env.conf
       - ../../_custom/env.conf
     ports:
       - "8070:8070"
     volumes:
+      - ./dev_bin/server.conf:/apps/server/bin/server.conf
+      - ./dev_connections_etracs25:/apps/etracs25/connections
+      #- ./dev_connections_notification:/apps/notification/connections
+
       - ./modules:/apps/etracs25/modules
       - ../../_res/connections:/apps/etracs25/connections/ext      
       - ../../_custom/module-server:/apps/etracs25/modules/ext/zzz-lgu-custom-module
 
       - ../../temp/etracs:/services/modules
+
 
       - ./dev_modules/gov:/gov
       - ./dev_modules/gov/etracs__gov.conf:/apps/etracs25/modules.conf.d/etracs__gov.conf

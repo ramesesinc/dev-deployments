@@ -1,0 +1,4 @@
+provider=websocket
+ws.host=${notification_ws_host}:8061
+ws.protocol=group
+ws.enabled=true
