@@ -1,0 +1,5 @@
+dialect=mysql
+driverClass=com.mysql.jdbc.Driver
+url=jdbc:mysql://${dbserver_host}/gensan_etracs255
+user=root
+pwd=1234
