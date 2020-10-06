@@ -30,7 +30,7 @@ class CashReceiptPluginInterceptor {
 			def conn = p.connection;
 			def serviceName = p.servicename;
 			if(!conn) {
-				conn = "local-"+p.objid+"-server";
+				conn = p.objid;
 			}
 			if(!serviceName) {
 				serviceName = "PaymentService";
@@ -51,7 +51,7 @@ class CashReceiptPluginInterceptor {
 			def conn = p.connection;
 			def serviceName = p.servicename;
 			if(!conn) {
-				conn = "local-"+p.objid+"-server";
+				conn = p.objid;
 			}
 			if(!serviceName) {
 				serviceName = "PaymentService";
