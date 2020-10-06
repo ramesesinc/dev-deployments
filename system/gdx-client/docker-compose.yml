@@ -39,4 +39,5 @@ services:
       
       - ../../_res/connections:/apps/gdx/connections/ext
 
+      - ./app.conf:/apps/gdx/app.conf
       - ../../temp/gdx:/apps/gdx/modules
