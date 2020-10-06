@@ -21,7 +21,7 @@ services:
 
   notification-ws60:
     container_name: notification-ws60
-    image: ramesesinc/notification-ws:1.0
+    image: ramesesinc/notification-ws:255.02
     restart: always
     logging:
       driver: "json-file"
@@ -30,13 +30,14 @@ services:
         max-size: 10m
     environment:
       TZ: "Asia/Manila"
+      topic_channels: "user,group,others,etracs,queue"
     ports:
       - "8060:8060"
 
 
   notification-ws61:
     container_name: notification-ws61
-    image: ramesesinc/notification-ws:1.0
+    image: ramesesinc/notification-ws:255.02
     restart: always
     logging:
       driver: "json-file"
@@ -45,5 +46,6 @@ services:
         max-size: 10m
     environment:
       TZ: "Asia/Manila"
+      topic_channels: "user,group,others,etracs"
     ports:
       - "8061:8060"
