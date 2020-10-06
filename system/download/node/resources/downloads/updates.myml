@@ -1,6 +1,6 @@
 app: 
   env:
-    "app.title" : "ETRACS 2.5 build 05 20200918 (Municipality of San Andres)"
+    "app.title" : "ETRACS 2.5 build 05 20200617_001 (CITY OF TAGBILARAN)"
     "app.host" : "${app_server_ip}:8070"
     "app.cluster" : "osiris3"
     "app.context" : "etracs25"
@@ -62,7 +62,7 @@ app:
     - { order: 242, version: 2.51, file: "modules/rptis/rameses-gov-etracs-rptis.jar" }
     - { order: 243, version: 2.51, file: "modules/rptis/rameses-gov-etracs-rptis-report.jar" }
     - { order: 243, version: 2.51, file: "modules/rptis/rameses-gov-etracs-rptis-transmittal.jar" }
-    - { order: 244, version: 2.51, file: "modules/rptis/rameses-gov-etracs-rptis-municipality.jar" }
+    - { order: 244, version: 2.51, file: "modules/rptis/rameses-gov-etracs-rptis-city.jar" }
     # bpls
     - { order: 250, version: 2.51, file: "modules/bpls/rameses-gov-etracs-bpls.jar" } 
     - { order: 251, version: 2.51, file: "modules/bpls/rameses-gov-etracs-bpls-ceo.jar" } 

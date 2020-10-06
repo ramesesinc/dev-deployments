@@ -23,6 +23,8 @@ services:
       - ../../_res/connections:/apps/etracs25/connections/ext      
       - ../../_custom/module-server:/apps/etracs25/modules/ext/zzz-lgu-custom-module
 
+      - ../../temp/etracs:/services/modules
+
       - ./dev_modules/gov:/gov
       - ./dev_modules/gov/etracs__gov.conf:/apps/etracs25/modules.conf.d/etracs__gov.conf
 
