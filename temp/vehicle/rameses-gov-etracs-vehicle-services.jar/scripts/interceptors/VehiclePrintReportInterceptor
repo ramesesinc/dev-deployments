@@ -21,7 +21,7 @@ class VehiclePrintReportInterceptor {
 	@Service("VehicleBillingService")
 	def billingSvc;
 
-	@Service(value="EntityFinderService", connection="local-entity-server")
+	@Service(value="EntityFinderService", connection="entity")
 	def entityFinder;
 
 	void loadUnit( def unit ) {

@@ -17,7 +17,7 @@ public class EmailService {
           
         def conf = mailSvc.conf;
         String smtphost = conf.get("mail.smtp.host"); 
-        if ( !smtphost ) throw new Exception("mail.smtp.host is required in local-smtp file"); 
+        if ( !smtphost ) throw new Exception("mail.smtp.host is required in smtp file"); 
 
         String from = conf.get("mail.from"); 
         String to = o.to;
