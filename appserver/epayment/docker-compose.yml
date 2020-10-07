@@ -22,6 +22,3 @@ services:
       - ../_res/connections:/apps/server/services/apps/enterprise/connections/ext
       - ./modules:/enterprise/modules
       - ./plugins:/enterprise/plugins
-      - /Users/elmonazareno/RAMESES/modules/epayment/server/rameses-gov-epayment-services.jar:/apps/server/services/apps/enterprise/modules/rameses-gov-epayment-services.jar
-      - /Users/elmonazareno/RAMESES/modules/epayment/server/rameses-gov-epayment-report-services.jar:/apps/server/services/apps/enterprise/modules/rameses-gov-epayment-report-services.jar
-      - /Users/elmonazareno/RAMESES/modules/financial/server/rameses-enterprise-financial-services.jar:/apps/server/services/apps/enterprise/modules/rameses-enterprise-financial-services.jar
