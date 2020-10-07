@@ -2,9 +2,10 @@ package enterprise.utils;
 
 import enterprise.facts.*;
 
-public abstract class VariableInfoProvider {
+public class DefaultVariableInfoProvider extends VariableInfoProvider {
 
-	abstract String getSchemaName();
+	String schemaName;
+
 
 	public def createFact(dd) {
 		def cf = null;	
@@ -28,13 +29,9 @@ public abstract class VariableInfoProvider {
 			if(!createDateFact) createDateFact = { new enterprise.facts.DateInfo() };
 			cf = createDateFact();
 		}
-		else if(dd.datatype == "string_array") {
-			if(!createStringArrayFact) createStringArrayFact = { new enterprise.facts.StringArrayInfo() };
-			cf = createStringArrayFact();
-		}
 		else {
 			if(!createObjectFact) 
-				throw new Exception("createObjectFact not implemented " + dd.datatype );
+				throw new Exception("createObjectFact not implemented");
 			cf = createObjectFact();
 		}
 		
@@ -47,7 +44,6 @@ public abstract class VariableInfoProvider {
 	def createIntegerFact ;
 	def createBooleanFact;
 	def createStringFact;
-	def createStringArrayFact;
 	def createDateFact;
 	def createObjectFact;
 
