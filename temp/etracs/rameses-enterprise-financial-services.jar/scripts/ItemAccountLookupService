@@ -1,0 +1,24 @@
+import com.rameses.annotations.*;
+import com.rameses.util.*;
+import java.rmi.server.*;
+import com.rameses.common.*
+
+class ItemAccountLookupService {
+	
+	@DataContext("itemaccount")
+	def itemAcctEm;
+
+	@ProxyMethod
+	public def lookup( def o ) {
+		println "****** lookup ->" + o;
+		return itemAcctEm.find( o ).first();
+	}
+
+	@ProxyMethod
+	public def lookupByOrg( def o ) {
+		println "****** lookup org ->" + o;
+		return itemAcctEm.find([ parentid: o.parentid ]).where(' org.objid = :orgid ', [ orgid: o.orgid ]).first();
+	}
+
+ 
+}
