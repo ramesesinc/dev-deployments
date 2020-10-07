@@ -7,10 +7,10 @@ import com.rameses.annotations.*;
 import com.rameses.util.*;
 import java.rmi.server.*;
 import java.util.*;
-import com.rameses.rules.common.RuleExecutionContext;
 import java.util.regex.*;
+import com.rameses.rules.common.RuleExecutionContext;
 
-public class AppnoGeneratorService {
+public class ControlnoGeneratorService {
 	
 	@DataContext(dynamic=true)
 	def em;
@@ -18,11 +18,15 @@ public class AppnoGeneratorService {
 	@Service("DateService")
 	def dateSvc;
 
+	@Service("SequenceService")
+	def seqSvc;
+
 	@Env
 	def env;
 
 	def pattern = Pattern.compile("\\[.*?\\]");
 
+	@ProxyMethod
 	public def formatNumber( def d, def handler, int num ) {
 	    def m = pattern.matcher( d );
 	    def sb = new StringBuilder();
@@ -40,20 +44,16 @@ public class AppnoGeneratorService {
 	    return sb.toString();
 	}
 
-	//res is the resource where you will base the 
 	@ProxyMethod
-	public def generate( def ptn, int nx ) {
+	public def generate( def pattern, int num ) {
 		def dt = dateSvc.getServerDate();
 
-		def handler = { pttn, num ->
+		def handler = { pttn, n ->
 			if( pttn == "org") {
 				return env.ORGCODE;
 			}
-			else if( pttn == "cluster") {
-				return cluster.code;
-			}
 			else if(pttn.startsWith("%")) {
-				return String.format( pttn, num );
+				return String.format( pttn, n );
 			}
 			else {
 				def df = new java.text.SimpleDateFormat( pttn );
@@ -62,8 +62,13 @@ public class AppnoGeneratorService {
 			return ret;
 		}
 		
-		return formatNumber( ptn, handler, nx );
+		return formatNumber( pattern, handler, num );
 	}
 
-
+	@ProxyMethod
+	public def getNextNo( def pattern ) {
+		def pttn = generate( pattern, 0 );
+		def i = seqSvc.getNextSeries( pttn );
+		return generate( pattern, i );
+	}
 }
