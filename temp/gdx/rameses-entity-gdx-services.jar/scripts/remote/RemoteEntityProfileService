@@ -9,7 +9,7 @@ public class RemoteEntityProfileService {
 	@Service("SmtpService")
 	def smtpSvc;
 
-	@Service(value="EntityProfileService", connection="local-entity-server")
+	@Service(value="EntityProfileService", connection="entity")
 	def profileSvc;
 
 	@Service 

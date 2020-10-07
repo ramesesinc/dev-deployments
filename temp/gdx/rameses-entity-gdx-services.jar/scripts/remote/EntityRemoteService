@@ -12,7 +12,7 @@ public class EntityRemoteService {
 	@Service 
 	def self; 
 
-	@Service(value="EntityOnlineRegistrationService", connection="local-entity-server")
+	@Service(value="EntityOnlineRegistrationService", connection="entity")
 	def onlineSvc;
 
 	def sendOtp(def o, def subject) {

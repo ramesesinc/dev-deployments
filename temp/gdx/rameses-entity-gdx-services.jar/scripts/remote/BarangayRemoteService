@@ -7,7 +7,7 @@ import java.text.*;
 public class BarangayRemoteService {
 
 
-	@Service(value="BarangayService", connection="local-etracs-server")
+	@Service(value="BarangayService", connection="etracs")
 	def bgySvc;
 	
 	@ProxyMethod

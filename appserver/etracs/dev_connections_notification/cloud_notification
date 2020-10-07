@@ -1,5 +1,5 @@
 provider=script
-app.host=${app_server_ip}:8072
-app.context=enterprise
+app.host=${cloud.host}
 app.cluster=osiris3
+app.context=notification
 readTimeout=60000

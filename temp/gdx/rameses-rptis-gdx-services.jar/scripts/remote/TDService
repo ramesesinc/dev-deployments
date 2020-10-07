@@ -5,7 +5,7 @@ import com.rameses.services.extended.*
 
 class TDService  {
 
-    @Service(value="TDOnlineService", connection="local-etracs-server")
+    @Service(value="TDOnlineService", connection="etracs")
     def svc;
 
     @ProxyMethod

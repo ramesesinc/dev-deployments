@@ -29,7 +29,10 @@ public class VerifyEmailService {
 		self.sendMail([ to: data.email, subject:msg, message: msg ]); 
 
 		if ( data.phoneno ) { 
-			self.sendSMS([ phoneno: data.phoneno, message: msg ]);  
+			self.sendSMS([ 
+				phoneno: data.phoneno, message: msg, 
+				txnid: data.txnid, txnno: data.txnno, txntype: data.txntype 
+			]); 
 		} 
 
 		return [ key: skey ];

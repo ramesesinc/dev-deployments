@@ -18,7 +18,7 @@ class EPaymentResolverService {
     @Service(value="epayment/CloudPaymentService", connection="cloud-server")
     def cloudSvc;
 
-    @Service(value="OrgService", connection="local-admin-server")
+    @Service(value="OrgService", connection="admin")
     def orgSvc;
 
     @ProxyMethod
