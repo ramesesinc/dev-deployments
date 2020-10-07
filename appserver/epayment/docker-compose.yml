@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+
+  epayment-server:
+    image: "ramesesinc/enterprise-common-server:255.03.001"
+    container_name: epayment-server
+    restart: always
+    logging: 
+      driver: "json-file"
+      options:
+        max-file: "5"
+        max-size: "10m"
+    env_file:
+      - ./env.conf   
+      - ../_res/env.conf
+      - ../_custom/env.conf      
+    ports: 
+      - "8095:8070"
+    volumes:
+      - ../_custom/datasources/epaymentds:/apps/server/services/datasources/mainds
+      - ../_res/connections:/apps/server/services/apps/enterprise/connections/ext
+      - ./modules:/enterprise/modules
+      - ./plugins:/enterprise/plugins
+      - /Users/elmonazareno/RAMESES/modules/epayment/server/rameses-gov-epayment-services.jar:/apps/server/services/apps/enterprise/modules/rameses-gov-epayment-services.jar
+      - /Users/elmonazareno/RAMESES/modules/epayment/server/rameses-gov-epayment-report-services.jar:/apps/server/services/apps/enterprise/modules/rameses-gov-epayment-report-services.jar
+      - /Users/elmonazareno/RAMESES/modules/financial/server/rameses-enterprise-financial-services.jar:/apps/server/services/apps/enterprise/modules/rameses-enterprise-financial-services.jar

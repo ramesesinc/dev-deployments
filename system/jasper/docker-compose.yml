@@ -1,49 +1,28 @@
 version: "3"
 
 services:
-  
-  notification-socketio:
-    container_name: notification-socketio
-    image: "ramesesinc/notification-server:1.0"
+
+  jasper-server:
+    image: ramesesinc/jasper-server:latest
+    container_name: jasper-server
     restart: always
-    logging:
+    logging: 
       driver: "json-file"
-      options: 
+      options:
         max-file: "5"
-        max-size: 10m
-    environment:
-      TZ: "Asia/Manila"
-    env_file:
-      - ./env.conf
+        max-size: "10m"
     ports: 
-      - "7080:8080"
-
-
-  notification-ws60:
-    container_name: notification-ws60
-    image: ramesesinc/notification-ws:1.0
-    restart: always
-    logging:
-      driver: "json-file"
-      options: 
-        max-file: "5"
-        max-size: 10m
-    environment:
-      TZ: "Asia/Manila"
-    ports:
-      - "8060:8060"
-
-
-  notification-ws61:
-    container_name: notification-ws61
-    image: ramesesinc/notification-ws:1.0
-    restart: always
-    logging:
-      driver: "json-file"
-      options: 
-        max-file: "5"
-        max-size: 10m
-    environment:
-      TZ: "Asia/Manila"
-    ports:
-      - "8061:8060"
+      - "8088:8070"
+    env_file:
+      - ../_custom/env.conf
+    volumes:
+     - ../_res/connections:/apps/server/services/apps/enterprise/connections
+     - ../_custom/reports:/apps/server/custom
+     - ./templates:/apps/server/templates
+     - ./output:/apps/server/output
+     #- ./modules:/apps/server/services/apps/enterprise/modules
+     #- /Users/elmonazareno/RAMESES/modules/jasper/server/jasper-report-services.jar:/apps/server/services/modules/jasper-report-services.jar     
+     - /Users/elmonazareno/RAMESES/modules/epayment/jasper/rameses-epayment-jasper-services.jar:/apps/enterprise/modules/rameses-epayment-jasper-services.jar
+     - /Users/elmonazareno/RAMESES/modules/epayment/reports:/apps/server/templates/epayment
+     - /Users/elmonazareno/RAMESES/modules/boracay/jasper/boracay-jasper-report-services.jar:/apps/enterprise/modules/boracay-jasper-report-services.jar
+     - /Users/elmonazareno/RAMESES/modules/boracay/reports:/apps/server/templates/boracay
