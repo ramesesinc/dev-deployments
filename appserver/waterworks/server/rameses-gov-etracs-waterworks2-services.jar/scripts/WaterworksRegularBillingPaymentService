@@ -155,6 +155,7 @@ class WaterworksRegularBillingPaymentService  {
         pmt.acctid = o.acctid;
         pmt.amount = bitems.sum{it.total};
         pmt.items = bitems;
+        pmt.pmttxntype = "billing";
         pmt = savePayment( pmt );
         //record also in the cr side
 

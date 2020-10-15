@@ -4,7 +4,7 @@ services:
 
   etracs-server:
     container_name: etracs-server
-    image: ramesesinc/etracs25-server-city:255.02.007
+    image: ramesesinc/etracs-server-city:255.03.001
     restart: always
     logging:
       driver: "json-file"
@@ -20,10 +20,6 @@ services:
     ports:
       - "8070:8070"
     volumes:
-      - ./dev_bin/server.conf:/apps/server/bin/server.conf
-      - ./dev_connections_etracs25:/apps/etracs25/connections
-      - ./dev_connections_notification:/services/apps/notification/connections
-
       - ./modules:/apps/etracs25/modules
 
       - ../../_custom/datasources:/services/datasources
@@ -32,10 +28,11 @@ services:
       - ../../_res/connections:/apps/etracs25/connections/ext      
       - ../../_custom/module-server:/apps/etracs25/modules/ext/zzz-lgu-custom-module
 
-      - ../../temp/etracs:/services/modules
-
       - ./dev_modules/gov:/gov
-      - ./dev_modules/gov/etracs__gov.conf:/apps/etracs25/modules.conf.d/etracs__gov.conf
+      - ./dev_modules/gov/module.conf:/apps/etracs25/modules.conf.d/_gov.conf
+
+      - ./dev_modules/treasury:/treasury
+      - ./dev_modules/treasury/module.conf:/apps/etracs25/modules.conf.d/_treasury.conf
 
       - ./dev_modules/rptis:/rptis
-      - ./dev_modules/rptis/etracs_rptis.conf:/apps/etracs25/modules.conf.d/etracs_rptis.conf
+      - ./dev_modules/rptis/module.conf:/apps/etracs25/modules.conf.d/rptis.conf

@@ -1,5 +1,5 @@
 dialect=mysql
 driverClass=com.mysql.jdbc.Driver
 url=jdbc:mysql://${dbserver_host}/etracs_notification
-user=root
+user=etracsuser
 pwd=1234

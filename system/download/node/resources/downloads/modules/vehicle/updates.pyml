@@ -5,5 +5,5 @@ app:
     "vehicle.app.context" : "enterprise"
 
   modules:
-    - { order: 270, version: 1.04, file: "vehicle/rameses-gov-etracs-vehicle-tagbilaran.jar" }
-    - { order: 271, version: 1.05, file: "vehicle/rameses-gov-etracs-vehicle.jar" }
+    - { order: 270, version: 1.04, file: "modules/vehicle/rameses-gov-etracs-vehicle-tagbilaran.jar" }
+    - { order: 271, version: 1.05, file: "modules/vehicle/rameses-gov-etracs-vehicle.jar" }

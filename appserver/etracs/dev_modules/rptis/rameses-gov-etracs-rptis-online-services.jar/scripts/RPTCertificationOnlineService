@@ -9,6 +9,9 @@ class RPTCertificationOnlineService {
 	@Service('Var')
 	def var
 
+	@Service('RPTUtil')
+	def util
+
 	@Service('EntityService')
 	def entitySvc
 
@@ -134,7 +137,7 @@ class RPTCertificationOnlineService {
 		required('refdate', params.refdate);
 		required('purpose', params.purpose);
 
-		validatedFaas(params.faas);
+		validateFaas(params.faas);
 
 		params.certid = 'RC' + new java.rmi.server.UID()
 		params.faases = []
@@ -190,14 +193,14 @@ class RPTCertificationOnlineService {
 		def reporttype = null;
 
 		params.faases.each {
-			validatedFaas(it)
+			validateFaas(it)
 			def ledger = em_ledger.select('lastyearpaid,lastqtrpaid,taxable,totalav,txntype.objid').find([faasid: it.objid]).first()
 			if (ledger) {
 				it.rptcertificationid = params.certid 
 				it.refid = it.objid
 				it.putAll(ledger)
 
-				if (ledger.taxable == 0) {
+				if (!util.isTrue(ledger.taxable)) {
 					reporttype = [name: 'exempt', title: 'EXEMPT']
 				} else if (ledger.totalav == 0) {
 					reporttype = [name: 'zerovalue', title: 'ZERO VALUE']
@@ -232,7 +235,7 @@ class RPTCertificationOnlineService {
         	purpose          : params.purpose,
 			asofyear         : year,
 			year 			 : year,
-			qtr 			 : 4,
+			qtr 			 : params.faases ? params.faases[0].lastqtrpaid : 4,
 			items 			 : params.faases,
         	oramount         : 0.0,
         	stampamount      : 0.0,
@@ -247,7 +250,7 @@ class RPTCertificationOnlineService {
 	def initNoa(params) {
 		required('faas', params.faas);
 		required('faas.objid', params.faas.objid);
-		validatedFaas(params.faas);
+		validateFaas(params.faas);
 
 		def noa = [objid: 'NOA' + new java.rmi.server.UID()]
 		noa.taxpayer = params.faas.taxpayer
@@ -278,7 +281,7 @@ class RPTCertificationOnlineService {
 		if (!value) throw new Exception(caption + ' must be specified');
 	}
 
-	void validatedFaas(entity) {
+	void validateFaas(entity) {
 		def fields = 'objid,state,effectivityyear,taxpayer.objid,taxpayer.name,taxpayer.address.text,administrator.name,administrator.address'
 		def faas = em_faas.select(fields).find([objid: entity.objid]).first()
 		if (!faas) {

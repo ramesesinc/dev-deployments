@@ -1,5 +1,0 @@
-provider=async
-context=notification
-host=localhost:${@@osiris3:port}
-connection=async_remote
-failOnConnectionError=false
