@@ -40,3 +40,4 @@ services:
       - ../../_res/connections:/apps/gdx/connections/ext
 
       - ./dev/app.conf:/apps/gdx/app.conf
+      - ./dev/plugins:/apps/gdx/plugins
