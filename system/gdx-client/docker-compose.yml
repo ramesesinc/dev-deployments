@@ -16,7 +16,7 @@ services:
     ports:
       - "8500:80"
     volumes:
-      - ./dev_conf.d:/etc/nginx/conf.d
+      - ./dev/conf.d:/etc/nginx/conf.d
 
 
   gdx-client:
@@ -39,4 +39,4 @@ services:
     volumes:
       - ../../_res/connections:/apps/gdx/connections/ext
 
-      - ./app.conf:/apps/gdx/app.conf
+      - ./dev/app.conf:/apps/gdx/app.conf
