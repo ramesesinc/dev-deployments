@@ -3,26 +3,23 @@ version: "3"
 services:
 
   jasper-server:
-    image: ramesesinc/jasper-server:latest
     container_name: jasper-server
+    image: ramesesinc/jasper-server:1.0
     restart: always
     logging: 
       driver: "json-file"
       options:
         max-file: "5"
         max-size: "10m"
+    environment:
+      TZ: "Asia/Manila"
+    env_file:
+      - ../../_res/env.conf
+      - ../../_custom/env.conf
     ports: 
       - "8088:8070"
-    env_file:
-      - ../_custom/env.conf
     volumes:
-     - ../_res/connections:/apps/server/services/apps/enterprise/connections
-     - ../_custom/reports:/apps/server/custom
-     - ./templates:/apps/server/templates
-     - ./output:/apps/server/output
-     #- ./modules:/apps/server/services/apps/enterprise/modules
-     #- /Users/elmonazareno/RAMESES/modules/jasper/server/jasper-report-services.jar:/apps/server/services/modules/jasper-report-services.jar     
-     - /Users/elmonazareno/RAMESES/modules/epayment/jasper/rameses-epayment-jasper-services.jar:/apps/enterprise/modules/rameses-epayment-jasper-services.jar
-     - /Users/elmonazareno/RAMESES/modules/epayment/reports:/apps/server/templates/epayment
-     - /Users/elmonazareno/RAMESES/modules/boracay/jasper/boracay-jasper-report-services.jar:/apps/enterprise/modules/boracay-jasper-report-services.jar
-     - /Users/elmonazareno/RAMESES/modules/boracay/reports:/apps/server/templates/boracay
+      - ../../_res/connections:/apps/enterprise/connections
+      - ./modules:/apps/enterprise/modules
+      - ./templates:/apps/server/templates
+      - ./output:/apps/server/output

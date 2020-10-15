@@ -2,7 +2,7 @@ import com.rameses.annotations.*;
 
 class EORRemittanceReportByReceiptService {
 	
-	@ActiveDB(value='eor_remittancereport', em='eor')
+	@ActiveDB('eor_remittancereport')
 	def remreport_db; 
 
 	@DataContext('eor_remittance')

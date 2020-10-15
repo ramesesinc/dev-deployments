@@ -15,10 +15,12 @@ services:
       TZ: "Asia/Manila"
     ports:
       - "8500:80"
+    volumes:
+      - ./dev/conf.d:/etc/nginx/conf.d
 
 
   gdx-client:
-    image: "ramesesinc/gdx-client:1.01.005"
+    image: "ramesesinc/gdx-client:1.02.001"
     container_name: gdx-client
     restart: always
     logging: 
@@ -35,9 +37,6 @@ services:
     ports:
       - "8571:8571"
     volumes:
-      - ./plugins:/apps/gdx/plugins
-      
       - ../../_res/connections:/apps/gdx/connections/ext
 
-      - ./app.conf:/apps/gdx/app.conf
-      - ../../temp/gdx:/apps/gdx/modules
+      - ./dev/app.conf:/apps/gdx/app.conf

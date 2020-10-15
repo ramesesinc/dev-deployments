@@ -11,7 +11,7 @@ app:
     "filemgmt.enabled" : false
     "ws.host" : "${app_server_ip}:8060"
     "#res.host" : "${app_server_ip}"
-    "socketio.host" : "${socketio_host}:7080"
+    "socketio.host" : "${app_server_ip}:7080"
 
   modules:
     # core
@@ -53,9 +53,6 @@ app:
     - { order: 222, version: 2.51, file: "modules/treasury/rameses-gov-treasury.jar" }
     - { order: 223, version: 2.51, file: "modules/treasury/rameses-gov-treasury-report.jar" }
     - { order: 224, version: 2.51, file: "modules/treasury/rameses-gov-treasury-tool.jar" }
-    # epayment
-    - { order: 230, version: 2.51, file: "modules/epayment/rameses-gov-epayment.jar" }
-    - { order: 231, version: 2.51, file: "modules/epayment/rameses-gov-epayment-report.jar" }
     # rptis
     - { order: 240, version: 2.51, file: "modules/rptis/rameses-gov-etracs-rptis-landtax.jar" }
     - { order: 241, version: 2.51, file: "modules/rptis/rameses-gov-etracs-rptis-landtax-report.jar" }

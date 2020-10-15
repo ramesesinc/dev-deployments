@@ -12,18 +12,20 @@ class EPaymentReceiptInterceptor {
     def numSvc;
 
     def getEOR( def o ) {
-        def rct = epmtSvc.getReceipt( [objid: o.objid ] );
+        def rct = epmtSvc.getReceipt([ objid: o.objid ]);
+        if ( !rct ) throw new Exception("'"+ o.objid +"' EOR record not found"); 
+
         rct.qrcode = "qrcode:" + rct.receiptno;
         rct.amountinwords = numSvc.doubleToWords( rct.amount );
         return rct;
     }
 
-    @Before(pattern="JasperReportService.generateReport", eval="#{ args[0].reportid == 'eor' }", index=-1000)
+    @Before(pattern="JasperReportService.generateReport", eval="#{ args[0].reportid == 'eor' }", index=-10000)
     public void getReport(def evt) {
         def o = evt.args[0];
         def refid = o.refid;
-        if(!o.data) {
-            o.data = getEOR( [objid: refid] );
+        if ( !o.data ) { 
+            o.data = getEOR([ objid: refid ]);
         }
         o.template = "eor51";
         o.modulename = "epayment";
@@ -32,7 +34,6 @@ class EPaymentReceiptInterceptor {
     @Before(pattern="JasperReportEmailService.send", eval="#{ args[0].reportid == 'eor' }", index=-10000)
     public void emailEOR(def evt) {
         def o = evt.args[0];
-
         def refid = o.refid;
         def data = getEOR( [objid: refid] );
 
@@ -43,9 +44,8 @@ class EPaymentReceiptInterceptor {
         o.txntype = data.paymentorder?.txntype;
         o.to = o.email;
         o.subject = "EOR No. " + data.receiptno;
-        o.message = "Dear valued customer <br>Please see attached Electronic OR. This is an electronic transaction. Do not reply";
+        o.message = "Dear valued customer <br>Please see attached Electronic OR";
         o.connection = "primary-email-server";
-
     }   
 
 }

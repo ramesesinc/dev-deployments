@@ -1,3 +1,0 @@
-provider=http
-http.host=${notification_ws_host}:8061/wschannel
-http.action=post

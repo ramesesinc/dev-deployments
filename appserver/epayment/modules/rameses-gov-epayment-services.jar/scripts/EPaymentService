@@ -164,8 +164,6 @@ class EPaymentService   {
 
     @ProxyMethod
     public def getReceipt( def o ) {
-        return eorEm.find( [objid: o.objid]).first(1);
+        return eorEm.find([ objid: o.objid ]).first(1); 
     }
-
-
 }

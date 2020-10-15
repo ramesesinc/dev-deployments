@@ -5,6 +5,9 @@ import treasury.utils.*;
 
 class EORRemittanceService {
 
+    @Service(value="PersistenceService", connection="etracs")
+    def etracsPersistenceSvc;
+
     @DataContext("eor_remittance")
     def remEm;
 
@@ -14,15 +17,8 @@ class EORRemittanceService {
     @DataContext("eor")
     def eorEm;
 
-
     @DataContext("eor_item")
     def eorItemEm;
-
-    @DataContext("fund")
-    def fundEm;
-
-    @DataContext("bankaccount")
-    def bankAcctEm;
 
     @Service("DateService")
     def dateSvc;
@@ -59,8 +55,8 @@ class EORRemittanceService {
 
         def fundList = eorItemEm.select("item.fund.objid,amount:{SUM(amount)}").where( "parent.remittanceid = :remittanceid", [remittanceid:m.objid] ).groupBy("item.fund.objid").list();
         fundList.each {
-            def v = [remittanceid:m.objid]    
-            v.fund = fundEm.find( [objid: it.item.fund.objid ] ).first(); 
+            def v = [ remittanceid: m.objid ];
+            v.fund = etracsPersistenceSvc.read([ _schemaname: 'fund', objid: it.item.fund.objid ]);
             v.amount = it.amount;
             remFundEm.create( v );
         }

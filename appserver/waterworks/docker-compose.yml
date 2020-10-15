@@ -4,7 +4,7 @@ services:
 
   waterworks-server:
     container_name: waterworks-server
-    image: ramesesinc/local-waterworks-server:255.01.004.002
+    image: ramesesinc/local-waterworks-server:255.03.001.001
     restart: always
     logging: 
       driver: "json-file"
@@ -17,9 +17,9 @@ services:
     ports: 
       - "8076:8070"
     volumes:
-      - ../../_res/connections:/apps/server/services/apps/enterprise/connections/ext
-      - ../../_custom/datasources/waterworksds:/apps/server/services/datasources/mainds
+      - ../../_res/connections:/apps/enterprise/connections/ext
+      - ../../_custom/datasources/waterworksds:/services/datasources/mainds
 
-      - ./server/rameses-gov-etracs-waterworks2-report-services.jar:/apps/server/services/apps/enterprise/modules/rameses-gov-etracs-waterworks2-report-services.jar      
-      - ./server/rameses-gov-etracs-waterworks2-services.jar:/apps/server/services/apps/enterprise/modules/rameses-gov-etracs-waterworks2-services.jar
-      - ./server/rameses-enterprise-services.jar:/apps/server/services/modules/rameses-enterprise-services.jar
+      - ./server/rameses-enterprise-services.jar:/services/modules/rameses-enterprise-services.jar
+      - ./server/rameses-gov-etracs-waterworks2-services.jar:/apps/enterprise/modules/rameses-gov-etracs-waterworks2-services.jar
+      - ./server/rameses-gov-etracs-waterworks2-report-services.jar:/apps/enterprise/modules/rameses-gov-etracs-waterworks2-report-services.jar

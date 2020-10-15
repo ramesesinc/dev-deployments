@@ -9,7 +9,7 @@ class EOREmailerTask {
 	@Service("DateService")
 	def dateSvc;
 	
-	@Service(value="JasperReportEmailService", connection="jasper-server")
+	@Service(value="JasperReportEmailService", connection="jasper")
 	def jasperService;
 
 	@Schedule(interval=10)
