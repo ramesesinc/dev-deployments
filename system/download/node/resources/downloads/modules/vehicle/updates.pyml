@@ -1,9 +1,0 @@
-app:
-
-  env:
-    "vehicle.app.host" : "${app_server_ip}:8072"
-    "vehicle.app.context" : "enterprise"
-
-  modules:
-    - { order: 270, version: 1.04, file: "modules/vehicle/rameses-gov-etracs-vehicle-tagbilaran.jar" }
-    - { order: 271, version: 1.05, file: "modules/vehicle/rameses-gov-etracs-vehicle.jar" }
